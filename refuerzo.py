@@ -1,13 +1,12 @@
 # Refuerzo.py
+# coding=utf8
 # -----------------------
 # Esta es la función que se encarga de dar el refuerzo tras recibir la
 # información de la jugada
 
 
-def calcRefuerzo(self, fantasmas, datos, movimiento):
+def calcRefuerzo(fantasmas, datos, movimiento):
     refuerzo = 0
-    print datos[0][5]
-    print datos[1][5]
     if fantasmas[0] > fantasmas[1]:
         refuerzo = 100
     elif movimiento is 'North' and datos[0][0] == 0:

@@ -66,12 +66,6 @@ def extract(self, gamestate, nearGhostParam):
     else:
         gDist = 4
 
-    """ En este punto vamos a sacar la fila de la tabla q que corresponde """
-    fila = sacarFila(north, south, east, west, bestMove, gDist)
-
-    """ Guardamos el estado de la partida """
-    estadoPartida = [north, south, east, west, bestMove, gDist]
-
     """ También sacamos el número de fantasmas vivos y muertos de los
         turnos """
     nFant = 4
@@ -83,6 +77,12 @@ def extract(self, gamestate, nearGhostParam):
         nFant = nFant - 1
     if gamestate.livingGhosts[4] is False:
         nFant = nFant - 1
+
+    """ En este punto vamos a sacar la fila de la tabla q que corresponde """
+    fila = sacarFila(north, south, east, west, bestMove, gDist)
+
+    """ Guardamos el estado de la partida """
+    estadoPartida = [north, south, east, west, bestMove, gDist]
 
     """ Guardamos la accion realizada """
     movimiento = str(gamestate.data.agentStates[0].getDirection())
@@ -101,18 +101,37 @@ def extract(self, gamestate, nearGhostParam):
     fantasmas.append(nFant)
     datos.append(estadoPartida)
     refuerzo = 0
+    filaAnt = 0
 
     if len(datos) >= 2:
         """ Calculamos el refuerzo """
-        refuerzo = calcRefuerzo(self, fantasmas, datos, movimiento)
-        print refuerzo
+        refuerzo = calcRefuerzo(fantasmas, datos, movimiento)
+
+        """ Sacamos la fila del estado anterior que se usará para calcular
+            la funcion """
+        filaAnt = sacarFila(datos[0][0], datos[0][1], datos[0][2], datos[0][3],datos[0][4], datos[0][5])
 
         """ Llamamos a saveData """
-        saveData(datos, movimiento, refuerzo)
+        "saveData(datos, movimiento, refuerzo)"
 
         """ Eliminamos el turno anterior despues de haberlo utilizado y pasar
             al siguiente """
         datos.pop(0)
         fantasmas.pop(0)
 
-    return fila
+    return filaAnt, fila, refuerzo
+
+
+def actionConverter(action):
+    """ Obtenemos el valor numerico de la accion para nuestro sistema """
+    accion = str(action)
+    if accion is "north":
+        accion = 0
+    elif accion is "south":
+        accion = 1
+    elif accion is "east":
+        accion = 2
+    else:
+        accion = 3
+    """ Devolvemos la accion """
+    return accion
