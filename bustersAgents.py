@@ -277,48 +277,45 @@ class AgentQLearning(BustersAgent):
                 - datos[1]: fila del estado actual en la tablaQ
                 - datos[2]: refuerzo
         """
+        print str(gameState.data.agentStates[0].getDirection())
         datos = extract(self, gameState, nearGhostParam)
-        """ Ahora calculamos el siguiente movimiento """
-        movimiento = computeActionFromValues(datos[1])
-        movRealizar = None
-        if movimiento == "North":
-            movRealizar = Directions.NORTH
-        elif movimiento == "South":
-            movRealizar = Directions.SOUTH
-        elif movimiento == "East":
-            movRealizar = Directions.EAST
+        if datos is not None:
+            """ Ahora calculamos el siguiente movimiento """
+            movimiento = computeActionFromValues(datos[1])
+            movRealizar = None
+            if movimiento == "North":
+                movRealizar = Directions.NORTH
+            if movimiento == "South":
+                movRealizar = Directions.SOUTH
+            if movimiento == "East":
+                movRealizar = Directions.EAST
+            if movimiento == "West":
+                movRealizar = Directions.WEST
+
+            """ Miramos si el siguiente movimiento es legal, para dar un refuerzo
+                negativo si no es asi """
+            qValor = 0
+            legal = 0
+            for i in gameState.getLegalPacmanActions():
+                if movimiento is i:
+                    legal = 1
+
+            if legal == 1:
+                """ Sacamos el q valor del estado del que transitamos """
+                qValor = calculateFunction(0.7, 0.9, datos[0], datos[1], datos[2], str(gameState.data.agentStates[0].getDirection()))
+                accion = actionConverter(str(gameState.data.agentStates[0].getDirection()))
+                qtable[datos[0]][accion] = qValor
+                writeQtable(qtable)
+            else:
+                qValor = calculateFunction(0.7, 0.9, datos[1], datos[1], -100, str(movRealizar))
+                accion = actionConverter(str(movRealizar))
+                qtable[datos[1]][accion] = qValor
+                writeQtable(qtable)
+
+            return movRealizar
+
         else:
-            movRealizar = Directions.WEST
-
-        """ Miramos si el siguiente movimiento es legal, para dar un refuerzo
-            negativo si no es asi """
-        qValor = 0
-        legal = 0
-        for i in gameState.getLegalPacmanActions():
-            if movimiento is i:
-                legal = 1
-
-        if legal == 1:
-            print "Al principio", qtable[datos[0]]
-            """ Sacamos el q valor del estado del que transitamos """
-            qValor = calculateFunction(0.7, 0.9, datos[0], datos[1], datos[2], str(gameState.data.agentStates[0].getDirection()))
-            print "El q valor", qValor
-            accion = actionConverter(str(gameState.data.agentStates[0].getDirection()))
-            print "La accion", accion
-            qtable[datos[0]][accion] = qValor
-            print "Al final", qtable[datos[0]]
-            writeQtable(qtable)
-        else:
-            print "Al principio", qtable[datos[1]]
-            qValor = calculateFunction(0.7, 0.9, datos[1], datos[1], -100, str(movRealizar))
-            print "El q valor", qValor
-            accion = actionConverter(str(movRealizar))
-            print "La accion", accion
-            qtable[datos[1]][accion] = qValor
-            print "Al final", qtable[datos[1]]
-            writeQtable(qtable)
-
-        return movRealizar
+            return Directions.STOP
 
 
 

@@ -103,20 +103,20 @@ def extract(self, gamestate, nearGhostParam):
         datos.pop(0)
         fantasmas.pop(0)
 
-    return filaAnt, fila, refuerzo
+        return filaAnt, fila, refuerzo
 
 
 def actionConverter(action):
     """ Obtenemos el valor numerico de la accion para nuestro sistema """
     accion = str(action)
-    acion = 0
-    if accion is "north":
+    acion = -1
+    if accion is "North":
         acion = 0
-    elif accion is "south":
+    if accion is "South":
         acion = 1
-    elif accion is "east":
+    if accion is "East":
         acion = 2
-    else:
+    if accion is "West":
         acion = 3
     """ Devolvemos la accion """
     return acion

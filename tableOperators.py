@@ -52,9 +52,10 @@ def writeQtable(qtable):
 def computeQValueFromValues(state, action):
     """ Obtenemos el Q valor de ese estado y esa accion """
     table = readQtable()
+    print state, action
     valor = table[state][action]
+    print valor
     return valor
-
 
 # Metodo que devuelve la accion que maximiza el Q valor de la acción
 def computeActionFromValues(state):
@@ -79,16 +80,17 @@ def computeActionFromValues(state):
             acciones.append(i)
     index = random.randint(0, (len(acciones)-1))
     accion = acciones[index]
+    action = -1
     if accion == 0:
-        accion = "North"
-    elif accion == 1:
-        accion = "South"
-    elif accion == 2:
-        accion = "East"
-    else:
-        accion = "West"
+        action = "North"
+    if accion == 1:
+        action = "South"
+    if accion == 2:
+        action = "East"
+    if accion == 3:
+        action = "West"
     """ Devolvemos el movimiento """
-    return accion
+    return action
 
 
 # Metodo que devuelve la accion que maximiza el Q valor de la acción

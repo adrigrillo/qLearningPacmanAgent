@@ -519,7 +519,7 @@ def loadAgent(pacman, nographics):
                 return getattr(module, pacman)
     raise Exception('The agent ' + pacman + ' is not specified in any *Agents.py.')
 
-def runGames( layout, pacman, ghosts, display, numGames, maxMoves=200):
+def runGames( layout, pacman, ghosts, display, numGames, maxMoves=100):
     # Hack for agents writing to the display
     import __main__
     __main__.__dict__['_display'] = display
