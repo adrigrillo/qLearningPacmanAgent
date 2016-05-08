@@ -82,7 +82,7 @@ def extract(self, gamestate, nearGhostParam):
             movimiento = "West"
 
     """ Guardamos la informacion """
-    fantasmas.append(nFant, nearGhostParam[1])
+    fantasmas.append([nFant, nearGhostParam[1]])
     datos.append(estadoPartida)
     refuerzo = 0
     filaAnt = 0

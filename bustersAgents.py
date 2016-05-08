@@ -299,16 +299,23 @@ class AgentQLearning(BustersAgent):
                 legal = 1
 
         if legal == 1:
+            print "Al principio", qtable[datos[0]]
             """ Sacamos el q valor del estado del que transitamos """
             qValor = calculateFunction(0.7, 0.9, datos[0], datos[1], datos[2], str(gameState.data.agentStates[0].getDirection()))
+            print "El q valor", qValor
             accion = actionConverter(str(gameState.data.agentStates[0].getDirection()))
+            print "La accion", accion
             qtable[datos[0]][accion] = qValor
+            print "Al final", qtable[datos[0]]
             writeQtable(qtable)
         else:
-            print "Es ilegal"
+            print "Al principio", qtable[datos[1]]
             qValor = calculateFunction(0.7, 0.9, datos[1], datos[1], -100, str(movRealizar))
+            print "El q valor", qValor
             accion = actionConverter(str(movRealizar))
+            print "La accion", accion
             qtable[datos[1]][accion] = qValor
+            print "Al final", qtable[datos[1]]
             writeQtable(qtable)
 
         return movRealizar
