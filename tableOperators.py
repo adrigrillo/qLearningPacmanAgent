@@ -52,9 +52,7 @@ def writeQtable(qtable):
 def computeQValueFromValues(state, action):
     """ Obtenemos el Q valor de ese estado y esa accion """
     table = readQtable()
-    print state, action
     valor = table[state][action]
-    print valor
     return valor
 
 

@@ -277,7 +277,6 @@ class AgentQLearning(BustersAgent):
                 - datos[1]: fila del estado actual en la tablaQ
                 - datos[2]: refuerzo
         """
-        print str(gameState.data.agentStates[0].getDirection())
         datos = extract(self, gameState, nearGhostParam)
         if datos is not None:
             """ Ahora calculamos el siguiente movimiento """
@@ -307,7 +306,9 @@ class AgentQLearning(BustersAgent):
                 qtable[datos[0]][accion] = qValor
                 writeQtable(qtable)
             else:
-                qValor = -100
+                """ En caso de que se choque con una pared el refuerzo es
+                    de -100 """
+                qValor = calculateFunction(0.9, 0, datos[1], datos[1], -100, str(movRealizar))
                 accion = actionConverter(str(movRealizar))
                 qtable[datos[1]][accion] = qValor
                 writeQtable(qtable)
