@@ -41,5 +41,5 @@ def calcRefuerzo(fantasmas, datos, movimiento):
     elif gDist > gDistAct:
         refuerzo = 1
     else:
-        refuerzo = 0
+        refuerzo = -1
     return refuerzo

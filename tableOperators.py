@@ -57,6 +57,7 @@ def computeQValueFromValues(state, action):
     print valor
     return valor
 
+
 # Metodo que devuelve la accion que maximiza el Q valor de la acción
 def computeActionFromValues(state):
     """

@@ -307,7 +307,7 @@ class AgentQLearning(BustersAgent):
                 qtable[datos[0]][accion] = qValor
                 writeQtable(qtable)
             else:
-                qValor = calculateFunction(0.7, 0.9, datos[1], datos[1], -100, str(movRealizar))
+                qValor = -100
                 accion = actionConverter(str(movRealizar))
                 qtable[datos[1]][accion] = qValor
                 writeQtable(qtable)
