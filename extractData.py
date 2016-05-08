@@ -50,22 +50,6 @@ def extract(self, gamestate, nearGhostParam):
             bestMove = action
             distMove = distancia
 
-    """ Vamos a discretizar las distancias al fantasma
-        Para ello vamos a hacer cuatro grupos:
-            - 1: Menor a 3
-            - 2: Menor a 8
-            - 3: Menor a 15
-            - 4: Mayor de 15 """
-    gDist = None
-    if nearGhostParam[1] <= 3:
-        gDist = 1
-    elif nearGhostParam[1] > 3 and nearGhostParam[1] <= 8:
-        gDist = 2
-    elif nearGhostParam[1] > 8 and nearGhostParam[1] <= 15:
-        gDist = 3
-    else:
-        gDist = 4
-
     """ También sacamos el número de fantasmas vivos y muertos de los
         turnos """
     nFant = 4
@@ -79,10 +63,10 @@ def extract(self, gamestate, nearGhostParam):
         nFant = nFant - 1
 
     """ En este punto vamos a sacar la fila de la tabla q que corresponde """
-    fila = sacarFila(north, south, east, west, bestMove, gDist)
+    fila = sacarFila(north, south, east, west, bestMove)
 
     """ Guardamos el estado de la partida """
-    estadoPartida = [north, south, east, west, bestMove, gDist]
+    estadoPartida = [north, south, east, west, bestMove]
 
     """ Guardamos la accion realizada """
     movimiento = str(gamestate.data.agentStates[0].getDirection())
@@ -98,7 +82,7 @@ def extract(self, gamestate, nearGhostParam):
             movimiento = "West"
 
     """ Guardamos la informacion """
-    fantasmas.append(nFant)
+    fantasmas.append(nFant, nearGhostParam[1])
     datos.append(estadoPartida)
     refuerzo = 0
     filaAnt = 0
@@ -109,7 +93,7 @@ def extract(self, gamestate, nearGhostParam):
 
         """ Sacamos la fila del estado anterior que se usará para calcular
             la funcion """
-        filaAnt = sacarFila(datos[0][0], datos[0][1], datos[0][2], datos[0][3],datos[0][4], datos[0][5])
+        filaAnt = sacarFila(datos[0][0], datos[0][1], datos[0][2], datos[0][3],datos[0][4])
 
         """ Llamamos a saveData """
         saveData(datos, movimiento, refuerzo)
