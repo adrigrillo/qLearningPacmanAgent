@@ -8,7 +8,7 @@
 def saveData(datos, accion, refuerzo):
 
     """ Aqui guardamos en el archivo """
-    fich = 'datosP3.txt'
+    fich = 'vigilansia.txt'
 
     if len(datos) == 2:
             data = ""

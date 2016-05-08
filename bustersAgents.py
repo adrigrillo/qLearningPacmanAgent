@@ -256,6 +256,7 @@ class RandomPAgent(BustersAgent):
 """
 from extractData import *
 from tableOperators import *
+from qFunction import *
 
 
 class AgentQLearning(BustersAgent):
@@ -277,10 +278,40 @@ class AgentQLearning(BustersAgent):
                 - datos[2]: refuerzo
         """
         datos = extract(self, gameState, nearGhostParam)
-        return Directions.WEST
+        """ Ahora calculamos el siguiente movimiento """
+        movimiento = computeActionFromValues(datos[1])
+        movRealizar = None
+        if movimiento == "North":
+            movRealizar = Directions.NORTH
+        elif movimiento == "South":
+            movRealizar = Directions.SOUTH
+        elif movimiento == "East":
+            movRealizar = Directions.EAST
+        else:
+            movRealizar = Directions.WEST
 
+        """ Miramos si el siguiente movimiento es legal, para dar un refuerzo
+            negativo si no es asi """
+        qValor = 0
+        legal = 0
+        for i in gameState.getLegalPacmanActions():
+            if movimiento is i:
+                legal = 1
 
+        if legal == 1:
+            """ Sacamos el q valor del estado del que transitamos """
+            qValor = calculateFunction(0.7, 0.9, datos[0], datos[1], datos[2], str(gameState.data.agentStates[0].getDirection()))
+            accion = actionConverter(str(gameState.data.agentStates[0].getDirection()))
+            qtable[datos[0]][accion] = qValor
+            writeQtable(qtable)
+        else:
+            print "Es ilegal"
+            qValor = calculateFunction(0.7, 0.9, datos[1], datos[1], -100, str(movRealizar))
+            accion = actionConverter(str(movRealizar))
+            qtable[datos[1]][accion] = qValor
+            writeQtable(qtable)
 
+        return movRealizar
 
 
 

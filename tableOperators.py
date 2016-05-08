@@ -13,6 +13,7 @@
 #   - Posición 2 --> east
 #   - Posición 3 --> west
 import json
+import random
 
 
 # Este metodo será el que cree la tablaQ que se guarde en un fichero
@@ -67,7 +68,7 @@ def computeActionFromValues(state):
     """ Leemos la tablaQ actual """
     table = readQtable()
     """ Obtenemos los valores de la tablaQ para el estado actual """
-    valores = table[state[0]][state[1]]
+    valores = table[state]
     """ Sacamos el maximo """
     maximo = max(valores)
     """ Sacamos la posicion en la que estaba de la lista de Q valores
@@ -76,14 +77,28 @@ def computeActionFromValues(state):
     for i in range(len(valores)):
         if valores[i] == maximo:
             acciones.append(i)
-    accion = acciones[random.randint(0, (len(acciones)-1))]
+    index = random.randint(0, (len(acciones)-1))
+    accion = acciones[index]
     if accion == 0:
-        accion = "north"
+        accion = "North"
     elif accion == 1:
-        accion = "south"
+        accion = "South"
     elif accion == 2:
-        accion = "east"
+        accion = "East"
     else:
-        accion = "west"
+        accion = "West"
     """ Devolvemos el movimiento """
     return accion
+
+
+# Metodo que devuelve la accion que maximiza el Q valor de la acción
+def maxQValor(state):
+    """ Leemos la tablaQ actual """
+    table = readQtable()
+    """ Obtenemos los valores de la tablaQ para el estado actual """
+    valores = table[state]
+    """ Sacamos el maximo """
+    maximo = max(valores)
+    """ Sacamos la posicion en la que estaba de la lista de Q valores
+            para saber que accion es la que maximiza """
+    return maximo

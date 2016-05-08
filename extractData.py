@@ -112,7 +112,7 @@ def extract(self, gamestate, nearGhostParam):
         filaAnt = sacarFila(datos[0][0], datos[0][1], datos[0][2], datos[0][3],datos[0][4], datos[0][5])
 
         """ Llamamos a saveData """
-        "saveData(datos, movimiento, refuerzo)"
+        saveData(datos, movimiento, refuerzo)
 
         """ Eliminamos el turno anterior despues de haberlo utilizado y pasar
             al siguiente """
@@ -125,13 +125,14 @@ def extract(self, gamestate, nearGhostParam):
 def actionConverter(action):
     """ Obtenemos el valor numerico de la accion para nuestro sistema """
     accion = str(action)
+    acion = 0
     if accion is "north":
-        accion = 0
+        acion = 0
     elif accion is "south":
-        accion = 1
+        acion = 1
     elif accion is "east":
-        accion = 2
+        acion = 2
     else:
-        accion = 3
+        acion = 3
     """ Devolvemos la accion """
-    return accion
+    return acion
