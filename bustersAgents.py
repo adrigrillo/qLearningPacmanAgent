@@ -301,14 +301,14 @@ class AgentQLearning(BustersAgent):
 
             if legal == 1:
                 """ Sacamos el q valor del estado del que transitamos """
-                qValor = calculateFunction(0.7, 0.9, datos[0], datos[1], datos[2], str(gameState.data.agentStates[0].getDirection()))
+                qValor = calculateFunction(0, 0, datos[0], datos[1], datos[2], str(gameState.data.agentStates[0].getDirection()))
                 accion = actionConverter(str(gameState.data.agentStates[0].getDirection()))
                 qtable[datos[0]][accion] = qValor
                 writeQtable(qtable)
             else:
                 """ En caso de que se choque con una pared el refuerzo es
                     de -100 """
-                qValor = calculateFunction(0.9, 0, datos[1], datos[1], -100, str(movRealizar))
+                qValor = calculateFunction(0, 0, datos[1], datos[1], -100, str(movRealizar))
                 accion = actionConverter(str(movRealizar))
                 qtable[datos[1]][accion] = qValor
                 writeQtable(qtable)
