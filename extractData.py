@@ -96,7 +96,7 @@ def extract(self, gamestate, nearGhostParam):
         filaAnt = sacarFila(datos[0][0], datos[0][1], datos[0][2], datos[0][3],datos[0][4])
 
         """ Llamamos a saveData """
-        saveData(datos, movimiento, refuerzo)
+        "saveData(datos, movimiento, refuerzo)"
 
         """ Eliminamos el turno anterior despues de haberlo utilizado y pasar
             al siguiente """
