@@ -214,8 +214,97 @@ Por tanto, las clases utilizadas para la creación de nuestro agente han sido:
 
 \item\textbf{tableOperators.py}: Que se encarga de realizar las operaciones sobre la tabla Q.
 
-\item\textbf{refuerzo.py}
+\item\textbf{refuerzo.py}: Que se encarga de calcular el refuerzo obtenido al ejecutar la acción.
+
+\item\textbf{qFunction.py}: Que calcula el valor que se establecerá en la tabla Q para un estado y acción determinada.
+
+\item\textbf{sacarFila.py}: Saca la fila de la tabla Q en la que se sitúa la información del estado actual.
+
 \end{itemize}
+
+Para la implementación de la tabla Q decidimos usar archivos JSON para guardar los datos del juego. Usaremos una matriz de dos dimensiones ($qtable(x,y)$) donde el primer [x] indicará el estado en el que se encuentra el Pac-Man.
+La segunda [y] será una lista con los Q valores para las diferentes acciones disponibles de forma que las posiciones de la lista significarán:
+
+\begin{itemize}
+\item Posición 0 $\longrightarrow$ north
+\item Posición 1 $\longrightarrow$ south
+\item Posición 2 $\longrightarrow$ east
+\item Posición 3 $\longrightarrow$ west
+\end{itemize}
+
+
+\subsection{tableOperators.py}
+
+Esta clase será la que contiene todos lo métodos que actúan sobre la tabla Q del agente, siendo estas la creación, lectura y modificación. Estos métodos son una modificación de los creados en el tutorial 4 adaptados a los estados de esta práctica. Podemos encontrar los siguientes métodos:
+
+\begin{itemize}
+
+\item\textbf{Creator(filas)}: Crea la tabla Q vacía con tantas filas como se le introduzca por parámetro, este será el número de estados y la guarda en un fichero.
+
+\item\textbf{readQtable()}: Lee la tabla Q y lo devuelve en forma de matriz.
+
+\item\textbf{writeQtable(qtable)}: Recibe como parámetro la tabla Q en forma de matriz y la guarda en el archivo.
+
+\item\textbf{computeQValueFromValues(state, action)}: Recibe el estado, fila en la matriz, y la acción realizada y devuelve el Q valor de dicha tupla.
+
+\item\textbf{computeActionFromValues(state)}: Recibe como parámetro el estado en el que se encuentra el Pac-Man, es decir, el número de fila de la matriz que representa el estado, y devuelve la acción que aporta maximiza el Q valor.
+
+\item\textbf{maxQValor(state)}: Recibe como parámetro el estado en el que se encuentra el Pac-Man, es decir, el número de fila de la matriz que representa el estado, y devuelve el Q valor más alto del estado. Es utilizado para la función que actualiza el Q valor.
+
+\end{itemize}
+
+\subsection{extractData.py}
+
+Esta clase es la encarga de recoger los datos de la partida para que luego puedan ser utilizados para calcular el refuerzo de la acción y la actualización de la tabla Q. Este recibirá como parámetros el estado de juego (\textit{Gamestate}) y la información del fantasma más cercano.
+
+\paragraph{}
+
+En este método sacamos los datos de la partida anteriormente explicados para definir el estado, es decir, los movimientos que están disponibles y la dirección del fantasma más cercano al Pac-Man. También recogemos el número de fantasma vivos en dicho turno, que utilizaremos para la función de refuerzo, la fila a la que corresponde el estado del turno y el movimiento realizado en el turno. Todos estos datos serán utilizados posteriormente.
+
+\paragraph{}
+Debido a que el refuerzo se calcula con los datos del estado del que partimos, el movimiento y el estado al que transitamos, recurrimos en esta clase a una técnica utilizada en las practicas anteriores para que los cálculos se realicen correctamente. Dejamos correr un turno para poder obtener los datos del turno anterior y del actual y, a partir de ahí, empezar el proceso de aprendizaje.
+
+Una vez obtenidos los datos de los dos estados, la acción realizada y el número de fantasmas vivos en cada turno llamamos al método que calcula el refuerzo. Tras esto, eliminamos el estado más antiguo de los datos para evitar el crecimiento del array que guarda los estados y datos.
+
+\paragraph{}
+
+Finalmente, este método devuelve la fila de la matriz del estado del que transitamos, la fila del estado al que transitamos y el refuerzo obtenido por el movimiento.
+
+En esta clase también contamos con un método que transforma la acción en el valor utilizado por la matriz de la tabla Q para poder sacar correctamente la acción.
+
+\subsection{sacarFila.py}
+
+Esta clase se encarga de sacar la fila en la tabla Q del estado correspondiente introducido por parámetros. Es decir, en esta clase se introduce por parámetros los movimientos disponibles y la dirección en la que se encuentra el fantasma más cercano y gracias a un conjunto de ifs este estado es clasificado y se devuelve la linea de la matriz que le corresponde.
+
+\subsection{refuerzo.py}
+
+El refuerzo en nuestro agente depende de diferentes acontecimientos en el juego, cuando se realiza un movimiento que no mejora el estado de la partida se dará un refuerzo negativo mínimo, esto es así para evitar las estancación en bucles del agente, cuando se produce un coche con la pared, el refuerzo es altamente negativo. 
+
+Sin embargo y, como hemos indicado anteriormente, cuando se produce una mejoría en la cercanía con los fantasmas, la cual se ha discretizado antes, se produce un refuerzo positivo mínimo, además, si se come un fantasma el refuerzo será ampliamente positivo.
+
+\paragraph{}
+
+Por tanto, esta es la clase que calcula el refuerzo al introducir como parámetros los estados implicados, el movimiento y el número de fantasmas vivos. Este, siguiendo las indicaciones interiores y, mediante comparaciones, devuelve el refuerzo.
+
+\subsection{saveData.py}
+
+Este método solo es utilizado en la Fase 1 de la practica para recoger y guardar los datos la partida en un fichero \textit{.txt}.
+
+\subsection{qFunction.py}
+
+Para la actualización de la tabla Q existente es necesario unos cálculos que dependen del estado del que transitamos, la acción realiza, el refuerzo, el valor Q máximo del estado al que transitamos y, como se trata de un proceso no determinista, de $\gamma$ y $\alpha$. Para ello seguimos la siguiente fórmula:
+
+\begin{center}
+$Q(s,a) \; \leftarrow \; (1 - \alpha) \, Q(s,a) \; + \; \alpha \, [ refuerzo \, + \, \gamma \, max_{a'} \, Q(s',a')]$
+\end{center}
+
+Este método recibirá como parámetros todos los datos necesarios y realizará los cálculos, devolviendo el valor actualizado de Q para el estado y la acción realizada.
+
+\subsection{bustersAgents.py}
+
+En esta clase es donde reside toda la lógica del agente, es la que se encarga de leer los datos de la tabla Q y de la partida, gestionarlos realizando los cálculos necesarios y los guarda de nuevo en el fichero de la tabla Q.
+
+Un problema que detectamos fue que el refuerzo negativo cuando el Pac-Man se chocaba con una pared no se gu
 
 \section{Descripción de asignación de estado empleada}
 
